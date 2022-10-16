@@ -48,7 +48,8 @@ def histogram(wordlistin, wordnumber=10, wordLength=0, Sort=True): #histogram fu
     return wordlistoutfinal
 
 
-a = readfile("Hamlet.txt")
+file = "Hamlet.txt"
+a = readfile(file)
 #print(a)
 list=[]
 listcheck=[]
@@ -81,9 +82,8 @@ thresholds = {
 }
 list2 = hcolor(list2, thresholds)
 
-for line in graph.graph('My Histogram', list2):
+for line in graph.graph('Histogram of words in book ' + file.replace('txt', ''), list2):
     print(line)
-
 
 
 
