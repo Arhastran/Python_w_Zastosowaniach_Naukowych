@@ -33,17 +33,18 @@ def exclude(words): #function for excluding words
 def histogram(wordlistin, wordnumber=10, wordLength=0, Sort=True): #histogram function
     wordlistout = []
     wordlistoutfinal = []
-    for element in range(wordnumber):
-         wordlistout.append(wordlistin[element])
-    for element in range(len(wordlistout)):
-       if len(wordlistout[element][0])>wordLength:
-            wordlistoutfinal.append(wordlistout[element])
-       else:
-            pass
     if Sort == True:
-        wordlistoutfinal.sort(key=sort_key, reverse=True)
+        wordlistin.sort(key=sort_key, reverse=True)
     else:
         pass
+    for element in range(len(wordlistin)):
+       if len(wordlistin[element][0])>wordLength:
+            wordlistout.append(wordlistin[element])
+       else:
+            pass
+    for element in range(wordnumber):
+        wordlistoutfinal.append(wordlistout[element])
+
     return wordlistoutfinal
 
 
@@ -82,6 +83,12 @@ list2 = hcolor(list2, thresholds)
 
 for line in graph.graph('My Histogram', list2):
     print(line)
+
+
+
+
+
+
 
 
 
