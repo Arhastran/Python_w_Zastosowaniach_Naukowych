@@ -4,49 +4,64 @@
 
 import numpy as np
 import random as random
-#import Pillow as pillow
+import tqdm
 
-class RandomSpinGenerator:
-    def __init__(self , size = 1, newspins = 0, T = 0, spins = []):
+class IsingModel:
+    def __init__(self , spin = 0, M = 1, N=1 , B = 1, Beta= 1, J = 1):
+        self.spins = self
         self.spin = self
-        self.newspin = self
-    def randomspins(self, size): #random spins web generator
-        spinslist = []
-        for i in range(size):
-            self.spin = random.randint(0, 1)
-            if self.spin == 0:
-                spinslist.append(-1)
-            else:
-                spinslist.append(1)
+
+    def randomspins(self, M, N):  # random spins web generator
+        spinslist = np.zeros((M,N), dtype = int)
+        for j in range(M):
+            for i in range(N):
+                self.spin = random.randint(0, 1)
+                if self.spin == 0:
+                    spinslist[i,j] = -1
+                else:
+                    spinslist[i, j] = 1
         return (spinslist)
 
-    def statechange(self, spin): #change state of another spin
-        newspin = spin*-1
-        return newspin
-
-    def energyfunction(self, spins, T):
+    def hamiltonian(self, J,spins):
         sum = np.sum(spins)
-        energy = np.exp(-(2*sum)/T)
-        return energy
+        return (-J*sum)
 
-#web parameters
+    def possibility(self,beta,energydifference):
+        return(np.exp(-beta*energydifference))
+
+    def changestate(self, spin):
+        return(spin*-1)
+    def magnetisation(self, spins):
+        pass
+
+
+B = 1
+Beta = 0.00001
+J = 0.35
 M = 10
 N = 10
-spins = []
+steps = 1
+
+a = IsingModel()
+aha = a.randomspins(M,N)
 
 
-a = RandomSpinGenerator()
-spins = a.randomspins(M*N)
+for i in tqdm.tqdm(range(len(aha))):
+    for j in range(len(aha)):
+        E0 = a.hamiltonian(J,aha) - B*aha[i,j]
+        aha[i,j] = -aha[i,j]
+        E1 = a.hamiltonian(J,aha) - B*aha[i,j]
+        deltaE = E1-E0
+        if deltaE < 0:
+            pass
+        elif deltaE > 0:
+            pos = a.possibility(Beta,deltaE)
+            aha[i, j] = -aha[i, j]
+        else:
+            pass
 
-print(spins)
 
-for i in range(M*N):
-    a = RandomSpinGenerator()
-    spins[i] = a.statechange(spins[i])
 
-energy = a.energyfunction(spins,250)
 
-print(spins)
-print(energy)
 
 
