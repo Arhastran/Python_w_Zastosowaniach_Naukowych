@@ -6,11 +6,19 @@ import numpy as np
 import random as random
 import tqdm
 import matplotlib.pyplot as plt
+from PIL import Image
+from PIL import ImageDraw
 
 class IsingModel:
-    def __init__(self , spin = 0, M = 1, N=1 , B = 1, Beta= 1, J = 1):
-        self.spins = self
-        self.spin = self
+    def __init__(self , spin = 0, spins = [],  M = 1, N=1 , B = 1, Beta= 1, J = 1, file = ''):
+        self.spins = spins
+        self.spin = spin
+        self.file = file
+        self.M = M
+        self.N = N
+        self.B = B
+        self.Beta = Beta
+        self.J = J
 
     def randomspins(self, M, N):  # random spins web generator
         spinslist = np.zeros((M,N), dtype = int)
@@ -34,42 +42,102 @@ class IsingModel:
         return(spin*-1)
     def magnetisation(self, spins):
         pass
+    def imagecreation(self,file):
+        img = Image.new('RGB', (1024, 1024), (0, 0, 0))
+        return print("Drawed")
+    def iterate(self,steps, spins):
+        Mag = []
+        for k in tqdm.tqdm(range(steps)):
+            for i in range(M):  # losowanie zadanej liczby spinów
+                for j in range(N):
+                    if j == 0:
+                        if i == 0:
+                            E0 = self.J * ((spins[i, j] * spins[i, N-1]) + (spins[i, j] * spins[i, j+1])+(spins[i,j]*spins[M-1,j])+(spins[i,j]*spins[i+1,j])) - self.B*(spins[i, N-1]+spins[i, j+1]+spins[M-1,j]+spins[i+1,j])
+                            E1 = self.J * ((-spins[i, j] * spins[i, N - 1]) + (-spins[i, j] * spins[i, j + 1]) + (-spins[i, j] * spins[M - 1, j]) + (-spins[i, j] * spins[i + 1, j])) - self.B*(spins[i, N-1]+spins[i, j+1]+spins[M-1,j]+spins[i+1,j])
+                            deltaE = E1-E0
+                        elif i == M-1:
+                            E0 = self.J * ((spins[i, j] * spins[i, N - 1]) + (spins[i, j] * spins[i, j + 1]) + (
+                                        spins[i, j] * spins[i-1, j]) + (spins[i, j] * spins[0, j])) - self.B*(spins[i, N-1]+spins[i, j+1]+spins[i-1,j]+spins[0,j])
+                            E1 = self.J * ((-spins[i, j] * spins[i, N - 1]) + (-spins[i, j] * spins[i, j + 1]) + (
+                                    -spins[i, j] * spins[i - 1, j]) + (-spins[i, j] * spins[0, j])) - self.B*(spins[i, N-1]+spins[i, j+1]+spins[i-1,j]+spins[0,j])
+                            deltaE = E1 - E0
+                        else:
+                            E0 = self.J * ((spins[i, j] * spins[i, N-1]) + (spins[i, j] * spins[i, j + 1]) + (
+                                    spins[i, j] * spins[i - 1, j]) + (spins[i, j] * spins[i+1, j])) - self.B*(spins[i, N-1]+spins[i, j+1]+spins[i-1,j]+spins[i+1,j])
+                            E1 = self.J * ((-spins[i, j] * spins[i, N - 1]) + (-spins[i, j] * spins[i, j + 1]) + (
+                                    -spins[i, j] * spins[i - 1, j]) + (-spins[i, j] * spins[i + 1, j])) - self.B*(spins[i, N-1]+spins[i, j+1]+spins[i-1,j]+spins[0,j])
+                            deltaE = E1 - E0
+                    elif j == N-1:
+                        if i == 0:
+                            E0 = self.J * ((spins[i,j]*spins[i,j-1])+(spins[i,j]*spins[i,0])+(spins[i,j]*spins[M-1,j])+(spins[i,j]*spins[i+1,j])) - self.B*(spins[i, j-1]+spins[i, 0]+spins[M-1,j]+spins[i+1,j])
+                            E1 = self.J * ((-spins[i, j] * spins[i, j - 1]) + (-spins[i, j] * spins[i, 0]) + (
+                                        spins[i, j] * spins[M - 1, j]) + (-spins[i, j] * spins[i + 1, j])) - self.B*(spins[i, j-1]+spins[i, 0]+spins[M-1,j]+spins[i+1,j])
+                            deltaE = E1 - E0
+                        elif i==M-1:
+                            E0 = self.J * ((spins[i, j] * spins[i, j - 1]) + (spins[i, j] * spins[i, 0]) + (
+                                        spins[i, j] * spins[0, j]) + (spins[i, j] * spins[i -1 , j]))- self.B*(spins[i, j-1]+spins[i, 0]+spins[0,j]+spins[i-1,j])
+                            E1 = self.J * ((-spins[i, j] * spins[i, j - 1]) + (-spins[i, j] * spins[i, 0]) + (
+                                    -spins[i, j] * spins[0, j]) + (-spins[i, j] * spins[i - 1, j])) - self.B*(spins[i, j-1]+spins[i, 0]+spins[0,j]+spins[i-1,j])
+                            deltaE = E1 - E0
+                        else:
+                            E0 = self.J * ((spins[i, j] * spins[i, j - 1]) + (spins[i, j] * spins[i, 0]) + (
+                                    spins[i, j] * spins[i+1, j]) + (spins[i, j] * spins[i - 1, j])) -  self.B*(spins[i, j-1]+spins[i, 0]+spins[i+1,j]+spins[i-1,j])
+                            E1 = self.J * ((-spins[i, j] * spins[i, j - 1]) + (-spins[i, j] * spins[i, 0]) + (
+                                    -spins[i, j] * spins[i + 1, j]) + (-spins[i, j] * spins[i - 1, j])) - self.B*(spins[i, j-1]+spins[i, 0]+spins[i+1,j]+spins[i-1,j])
+                            deltaE = E1 - E0
 
+                    else:
+                        if i ==0:
+                            E0 = self.J * ((spins[i, j] * spins[i, j-1])+(spins[i,j]*spins[i,j+1])+(spins[i,j]*spins[i+1,j])+(spins[i,j]*spins[M-1,j])) - self.B*(spins[i, j-1]+spins[i, j+1]+spins[i+1,j]+spins[M-1,j])
+                            E1 = self.J * ((-spins[i, j] * spins[i, j - 1]) + (-spins[i, j] * spins[i, j + 1]) + (
+                                        -spins[i, j] * spins[i + 1,j]) + (-spins[i, j] * spins[M - 1, j])) - self.B*(spins[i, j-1]+spins[i, j+1]+spins[i+1,j]+spins[M-1,j])
+                            deltaE = E1 - E0
+                        if i == M-1:
+                            E0 = self.J * ((spins[i, j] * spins[i, j - 1]) + (spins[i, j] * spins[i, j + 1]) + (
+                                        spins[i, j] * spins[0,j]) + (spins[i, j] * spins[i-1, j])) - self.B*(spins[i, j-1]+spins[i, j+1]+spins[0+1,j]+spins[i-1,j])
+                            E1 = self.J * ((spins[i, j] * spins[i, j - 1]) + (spins[i, j] * spins[i, j + 1]) + (
+                                    spins[i, j] * spins[0, j]) + (spins[i, j] * spins[i - 1, j])) - self.B*(spins[i, j-1]+spins[i, j+1]+spins[0+1,j]+spins[i-1,j])
+                            deltaE = E1 - E0
+                        else:
+                            E0 = self.J * ((spins[i, j] * spins[i, j - 1]) + (spins[i, j] * spins[i, j + 1]) + (
+                                    spins[i, j] * spins[i+1, j]) + (spins[i, j] * spins[i - 1, j])) - self.B*(spins[i, j-1]+spins[i, j+1]+spins[i+1,j]+spins[i,j])
+                            E1 = self.J * ((spins[i, j] * spins[i, j - 1]) + (spins[i, j] * spins[i, j + 1]) + (
+                                    spins[i, j] * spins[i + 1, j]) + (spins[i, j] * spins[i - 1, j])) - self.B*(spins[i, j-1]+spins[i, j+1]+spins[i+1,j]+spins[i,j])
+                            deltaE = E1 - E0
+                if deltaE <= 0 or np.random.rand() < np.exp(- deltaE):
+                    spins[i,j] = -spins[i,j]
+            print(spins)
+            Mag.append(np.sum(spins)/(M*N))
+        return spins, Mag
 
 B = 1
 Beta = 0.00001
-J = 0.35
-M = 20
-N = 10
-steps = 1
+J = 1
+M = 3
+N = 3
+steps = 10
+file = '/Users/adamignaciuk/PycharmProjects/PythonwZastosowaniachNaukowych/Lab2/img.png'
+spins = np.zeros((M,N), dtype = int)
+Mag = np.zeros(M)
+
 
 stepsforplot = []
 spinsforplot = []
 
-a = IsingModel()
+a = IsingModel(J=J,M=M, N=N, B=B, Beta=Beta)
 aha = a.randomspins(M,N)
+print(aha)
+spins, Mag = a.iterate(steps,aha)
 
 
-for i in tqdm.tqdm(range(M)):
-    for j in range(N):
-        E0 = a.hamiltonian(J,aha) - B*aha[i,j]
-        aha[i,j] = -aha[i,j]
-        E1 = a.hamiltonian(J,aha) - B*aha[i,j]
-        deltaE = E1-E0
-        if deltaE < 0:
-            pass
-        elif deltaE > 0:
-            pos = a.possibility(Beta,deltaE)
-            aha[i, j] = -aha[i, j]
-        else:
-            pass
-        spinsforplot.append(np.sum(aha)/(M*N))
 
-stepsforplot = range(0,M*N)
-plt.plot(stepsforplot,spinsforplot)
+
+stepsforplot = range(0,steps)
+plt.plot(stepsforplot,Mag)
 plt.xlabel("Step[n.o]")
 plt.ylabel("Sum[a.u.]")
 plt.show()
+
 
 
 
