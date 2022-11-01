@@ -52,70 +52,70 @@ class IsingModel:
                 for j in range(N):
                     if j == 0:
                         if i == 0:
-                            E0 = self.J * ((spins[i, j] * spins[i, N-1]) + (spins[i, j] * spins[i, j+1])+(spins[i,j]*spins[M-1,j])+(spins[i,j]*spins[i+1,j])) - self.B*(spins[i, N-1]+spins[i, j+1]+spins[M-1,j]+spins[i+1,j])
-                            E1 = self.J * ((-spins[i, j] * spins[i, N - 1]) + (-spins[i, j] * spins[i, j + 1]) + (-spins[i, j] * spins[M - 1, j]) + (-spins[i, j] * spins[i + 1, j])) - self.B*(spins[i, N-1]+spins[i, j+1]+spins[M-1,j]+spins[i+1,j])
-                            deltaE = E1-E0
+                            E0 = self.J * ((spins[i, j] * spins[i, N-1]) + (spins[i, j] * spins[i, j+1])+(spins[i,j]*spins[M-1,j])+(spins[i,j]*spins[i+1,j])) - self.B*(spins[i,j])
+                            E1 = self.J * ((-spins[i, j] * spins[i, N - 1]) + (-spins[i, j] * spins[i, j + 1]) + (-spins[i, j] * spins[M - 1, j]) + (-spins[i, j] * spins[i + 1, j])) - self.B*(spins[i,j])
+                            deltaE = E1 - E0
                         elif i == M-1:
                             E0 = self.J * ((spins[i, j] * spins[i, N - 1]) + (spins[i, j] * spins[i, j + 1]) + (
-                                        spins[i, j] * spins[i-1, j]) + (spins[i, j] * spins[0, j])) - self.B*(spins[i, N-1]+spins[i, j+1]+spins[i-1,j]+spins[0,j])
+                                        spins[i, j] * spins[i-1, j]) + (spins[i, j] * spins[0, j])) - self.B*(spins[i,j])
                             E1 = self.J * ((-spins[i, j] * spins[i, N - 1]) + (-spins[i, j] * spins[i, j + 1]) + (
-                                    -spins[i, j] * spins[i - 1, j]) + (-spins[i, j] * spins[0, j])) - self.B*(spins[i, N-1]+spins[i, j+1]+spins[i-1,j]+spins[0,j])
+                                    -spins[i, j] * spins[i - 1, j]) + (-spins[i, j] * spins[0, j])) - self.B*(spins[i,j])
                             deltaE = E1 - E0
                         else:
                             E0 = self.J * ((spins[i, j] * spins[i, N-1]) + (spins[i, j] * spins[i, j + 1]) + (
-                                    spins[i, j] * spins[i - 1, j]) + (spins[i, j] * spins[i+1, j])) - self.B*(spins[i, N-1]+spins[i, j+1]+spins[i-1,j]+spins[i+1,j])
+                                    spins[i, j] * spins[i - 1, j]) + (spins[i, j] * spins[i+1, j])) - self.B*(spins[i,j])
                             E1 = self.J * ((-spins[i, j] * spins[i, N - 1]) + (-spins[i, j] * spins[i, j + 1]) + (
-                                    -spins[i, j] * spins[i - 1, j]) + (-spins[i, j] * spins[i + 1, j])) - self.B*(spins[i, N-1]+spins[i, j+1]+spins[i-1,j]+spins[0,j])
+                                    -spins[i, j] * spins[i - 1, j]) + (-spins[i, j] * spins[i + 1, j])) - self.B*(spins[i,j])
                             deltaE = E1 - E0
                     elif j == N-1:
                         if i == 0:
-                            E0 = self.J * ((spins[i,j]*spins[i,j-1])+(spins[i,j]*spins[i,0])+(spins[i,j]*spins[M-1,j])+(spins[i,j]*spins[i+1,j])) - self.B*(spins[i, j-1]+spins[i, 0]+spins[M-1,j]+spins[i+1,j])
+                            E0 = self.J * ((spins[i,j]*spins[i,j-1])+(spins[i,j]*spins[i,0])+(spins[i,j]*spins[M-1,j])+(spins[i,j]*spins[i+1,j])) - self.B*(spins[i,j])
                             E1 = self.J * ((-spins[i, j] * spins[i, j - 1]) + (-spins[i, j] * spins[i, 0]) + (
-                                        spins[i, j] * spins[M - 1, j]) + (-spins[i, j] * spins[i + 1, j])) - self.B*(spins[i, j-1]+spins[i, 0]+spins[M-1,j]+spins[i+1,j])
+                                        spins[i, j] * spins[M - 1, j]) + (-spins[i, j] * spins[i + 1, j])) - self.B*(spins[i,j])
                             deltaE = E1 - E0
                         elif i==M-1:
                             E0 = self.J * ((spins[i, j] * spins[i, j - 1]) + (spins[i, j] * spins[i, 0]) + (
-                                        spins[i, j] * spins[0, j]) + (spins[i, j] * spins[i -1 , j]))- self.B*(spins[i, j-1]+spins[i, 0]+spins[0,j]+spins[i-1,j])
+                                        spins[i, j] * spins[0, j]) + (spins[i, j] * spins[i -1 , j]))- self.B*(spins[i,j])
                             E1 = self.J * ((-spins[i, j] * spins[i, j - 1]) + (-spins[i, j] * spins[i, 0]) + (
-                                    -spins[i, j] * spins[0, j]) + (-spins[i, j] * spins[i - 1, j])) - self.B*(spins[i, j-1]+spins[i, 0]+spins[0,j]+spins[i-1,j])
+                                    -spins[i, j] * spins[0, j]) + (-spins[i, j] * spins[i - 1, j])) - self.B*(spins[i,j])
                             deltaE = E1 - E0
                         else:
                             E0 = self.J * ((spins[i, j] * spins[i, j - 1]) + (spins[i, j] * spins[i, 0]) + (
-                                    spins[i, j] * spins[i+1, j]) + (spins[i, j] * spins[i - 1, j])) -  self.B*(spins[i, j-1]+spins[i, 0]+spins[i+1,j]+spins[i-1,j])
+                                    spins[i, j] * spins[i+1, j]) + (spins[i, j] * spins[i - 1, j])) -  self.B*(spins[i,j])
                             E1 = self.J * ((-spins[i, j] * spins[i, j - 1]) + (-spins[i, j] * spins[i, 0]) + (
-                                    -spins[i, j] * spins[i + 1, j]) + (-spins[i, j] * spins[i - 1, j])) - self.B*(spins[i, j-1]+spins[i, 0]+spins[i+1,j]+spins[i-1,j])
+                                    -spins[i, j] * spins[i + 1, j]) + (-spins[i, j] * spins[i - 1, j])) - self.B*(spins[i,j])
                             deltaE = E1 - E0
 
                     else:
                         if i ==0:
-                            E0 = self.J * ((spins[i, j] * spins[i, j-1])+(spins[i,j]*spins[i,j+1])+(spins[i,j]*spins[i+1,j])+(spins[i,j]*spins[M-1,j])) - self.B*(spins[i, j-1]+spins[i, j+1]+spins[i+1,j]+spins[M-1,j])
+                            E0 = self.J * ((spins[i, j] * spins[i, j-1])+(spins[i,j]*spins[i,j+1])+(spins[i,j]*spins[i+1,j])+(spins[i,j]*spins[M-1,j])) - self.B*(spins[i,j])
                             E1 = self.J * ((-spins[i, j] * spins[i, j - 1]) + (-spins[i, j] * spins[i, j + 1]) + (
-                                        -spins[i, j] * spins[i + 1,j]) + (-spins[i, j] * spins[M - 1, j])) - self.B*(spins[i, j-1]+spins[i, j+1]+spins[i+1,j]+spins[M-1,j])
+                                        -spins[i, j] * spins[i + 1,j]) + (-spins[i, j] * spins[M - 1, j])) - self.B*(spins[i,j])
                             deltaE = E1 - E0
                         if i == M-1:
                             E0 = self.J * ((spins[i, j] * spins[i, j - 1]) + (spins[i, j] * spins[i, j + 1]) + (
-                                        spins[i, j] * spins[0,j]) + (spins[i, j] * spins[i-1, j])) - self.B*(spins[i, j-1]+spins[i, j+1]+spins[0+1,j]+spins[i-1,j])
+                                        spins[i, j] * spins[0,j]) + (spins[i, j] * spins[i-1, j])) - self.B*(spins[i,j])
                             E1 = self.J * ((spins[i, j] * spins[i, j - 1]) + (spins[i, j] * spins[i, j + 1]) + (
-                                    spins[i, j] * spins[0, j]) + (spins[i, j] * spins[i - 1, j])) - self.B*(spins[i, j-1]+spins[i, j+1]+spins[0+1,j]+spins[i-1,j])
+                                    spins[i, j] * spins[0, j]) + (spins[i, j] * spins[i - 1, j])) - self.B*(spins[i,j])
                             deltaE = E1 - E0
                         else:
                             E0 = self.J * ((spins[i, j] * spins[i, j - 1]) + (spins[i, j] * spins[i, j + 1]) + (
-                                    spins[i, j] * spins[i+1, j]) + (spins[i, j] * spins[i - 1, j])) - self.B*(spins[i, j-1]+spins[i, j+1]+spins[i+1,j]+spins[i,j])
+                                    spins[i, j] * spins[i+1, j]) + (spins[i, j] * spins[i - 1, j])) - self.B*(spins[i,j])
                             E1 = self.J * ((spins[i, j] * spins[i, j - 1]) + (spins[i, j] * spins[i, j + 1]) + (
-                                    spins[i, j] * spins[i + 1, j]) + (spins[i, j] * spins[i - 1, j])) - self.B*(spins[i, j-1]+spins[i, j+1]+spins[i+1,j]+spins[i,j])
+                                    spins[i, j] * spins[i + 1, j]) + (spins[i, j] * spins[i - 1, j])) - self.B*(spins[i,j])
                             deltaE = E1 - E0
-                if deltaE <= 0 or np.random.rand() < np.exp(- deltaE):
+                if deltaE <= 0 or np.random.rand() < np.exp(- deltaE/k):
                     spins[i,j] = -spins[i,j]
             print(spins)
             Mag.append(np.sum(spins)/(M*N))
         return spins, Mag
 
-B = 1
+B = 10
 Beta = 0.00001
-J = 1
-M = 3
-N = 3
-steps = 10
+J = 1.5
+M = 50
+N = 50
+steps = 50
 file = '/Users/adamignaciuk/PycharmProjects/PythonwZastosowaniachNaukowych/Lab2/img.png'
 spins = np.zeros((M,N), dtype = int)
 Mag = np.zeros(M)
@@ -137,6 +137,7 @@ plt.plot(stepsforplot,Mag)
 plt.xlabel("Step[n.o]")
 plt.ylabel("Sum[a.u.]")
 plt.show()
+
 
 
 
