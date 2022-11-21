@@ -5,6 +5,8 @@
 import json
 import requests
 from bs4 import BeautifulSoup
+from rich.console import Console
+from rich.table import Table
 
 
 url = "https://www.imdb.com/chart/bottom"
@@ -21,11 +23,30 @@ for element in soup.find_all(class_=True):
 psy = soup.find('div', {'class':'seen-collection'})
 #print(psy)
 
+console = Console()
+table = Table(title="Worst movies from IMDB ")
+table.add_column("Number", style="cyan")
+table.add_column("Name of the bad bad movie", style="red")
 
-for film in psy.find_all('div',{'class' : 'global-sprite lister-sort-reverse descending'}):
-    #span = film.find('title')
+films = []
+for film in psy.find_all('a'):
+    #span = film.find('title=')
     #title = film.find('a')
-    print(film)
-    #print(span.text.strip(), title.text.strip(), title['href'])
+    #print(film)
+    #print(span)
+    films.append(film.text.strip())
+    #print(film.text.strip())
 #soup.select("product-desc")
+newfilms = []
+iter = 1
+for i in range(len(films)):
+    if (i % 2) == 0:
+        pass
+    else:
+        newfilms.append(films[i])
+        no = str(iter)
+        table.add_row(no, films[i])
+        iter += 1
+console.print(table)
+
 
