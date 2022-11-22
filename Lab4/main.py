@@ -7,7 +7,7 @@ import requests
 from bs4 import BeautifulSoup
 from rich.console import Console
 from rich.table import Table
-
+import os
 
 url = "https://www.imdb.com/chart/bottom"
 r = requests.get(url) #get albo post, to drugie nie jest w URL, session to coś do trzymana sesji
@@ -48,5 +48,10 @@ for i in range(len(films)):
         table.add_row(no, films[i])
         iter += 1
 console.print(table)
+
+jasonek = json.dumps(newfilms, indent=4)
+filename = "file.txt"
+file = open(filename, "w")
+file.write(jasonek)
 
 
