@@ -12,6 +12,7 @@ import matplotlib.animation
 from matplotlib.animation import FuncAnimation, writers
 from IPython import display
 from matplotlib import colors as c
+import matplotlib.animation as animation
 
 
 class IsingModel:
@@ -24,7 +25,9 @@ class IsingModel:
         self.B = B
         self.Beta = Beta
         self.J = J
-        self.images = []
+        self.fig = plt.figure()
+        self.ax = plt.axes()
+        self.line, = self.ax.plot([], [], lw=2)
 
     def randomspins(self):
         np.zeros((self.M, self.N))
@@ -34,22 +37,26 @@ class IsingModel:
                 if spins[i,j] == 0:
                     spins[i , j] = -1
         return spins
+    def testrandomspins(self):
+        spins = np.ones((self.M, self.N))
+        return spins
 
     def hamiltonian(self, spins1, spins2):
-        sum1 = np.sum(spins1)
-        sum2 = np.sum(spins2)
-        return (-self.J*(sum1+sum2)-self.B*(sum2))
+        return (-self.J*(spins1+spins2)-self.B*(spins2))
 
     def sumstate(self, spins,i,j):
        # for dw in range(-1, 2):
-       #    for dh in range(-1, 2):
+       # for dh in range(-1, 2):
         field = spins[i+1,j]+spins[i-1,j]+spins[i,j+1]+spins[i,j-1]
         previous = field + spins[i,j]
         current = field - spins[i,j]
         energyBefore = self.hamiltonian(field,previous)
         energyAfter= self.hamiltonian(field,current)
-        deltaE = (energyBefore - energyAfter)
-        if deltaE < 0:
+        deltaE = (energyAfter - energyBefore)
+        print(energyBefore)
+        print(energyAfter)
+        print(deltaE)
+        if deltaE > 0:
             spins[i, j] = -1 * spins[i, j]
         return spins
 
@@ -59,33 +66,49 @@ class IsingModel:
         for n in range(ran):
             i = np.random.randint(self.M-1)
             j = np.random.randint(self.N-1)
-            print(i,j)
             xd.append(self.sumstate(xd[n],i,j))
-            print(xd[n])
         return xd, n
+
+    def set_data(self, datax, datay):
+        self.datax = datax
+        self.datay = datay
+
+    def ani_update(self, i):
+        y = self.datay[i]
+        cMap = c.ListedColormap(['black', 'white'])
+        plt.pcolormesh(y, cmap=cMap)
+
+
+    def animate(self):
+        self.anim = animation.FuncAnimation(self.fig, self.ani_update, frames=4, interval=20,
+                                            blit=False)
+        plt.show()
 
 J = 1
 M = 10
 N = 10
-B = 1
+B = 1/2
 Beta = 1
 
 a = IsingModel(J=J,M=M, N=N, B=B, Beta=Beta)
 spins = a.randomspins()
-xd, number = a.changing(spins,5)
+xd, number = a.changing(spins,10)
 #print(spins)
 #print(xd)
 
 img = Image.new('RGB',(M,N), (255,255,255))
 draw = ImageDraw.Draw(img)
 
-for element in range(number):
-    aha = xd[element]
-    for i in range(M):
-        for j in range(N):
-            shape = [(i, j), (i, j)]
-            if aha[i, j] == 1:
-                r = draw.rectangle(shape, (255, 255, 255), width=1)
-            else:
-                r = draw.rectangle(shape, (0, 0, 0), width=1)
-    img.save('/Users/adamignaciuk/PycharmProjects/PythonwZastosowaniachNaukowych/Lab2/img'+str(element)+'.png')
+a.set_data(number,xd)
+a.animate()
+#for element in range(number+1):
+#    aha = xd[element]
+#    for i in range(M):
+#        for j in range(N):
+#            shape = [(i, j), (i, j)]
+#            if aha[i, j] == 1:
+#                r = draw.rectangle(shape, (255, 255, 255), width=1)
+#            else:
+#                r = draw.rectangle(shape, (0, 0, 0), width=1)
+#    img.save('/Users/adamignaciuk/PycharmProjects/PythonwZastosowaniachNaukowych/Lab2/img'+str(element)+'.png')
+
