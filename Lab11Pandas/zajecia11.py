@@ -1,73 +1,53 @@
-#18.01.2023
-#Pandas
-
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import io
+import scipy.special
+from bokeh.layouts import gridplot
+from bokeh.plotting import figure, show
+from ascii_graph import Pyasciigraph
+from ascii_graph.colors import *
+from ascii_graph.colordata import hcolor
+
 
 suicide = pd.read_csv("suicide-rates-by-age-detailed.csv")
-#print(suicide)
-
-suicide.head()
-ogon = suicide.tail()
-col = suicide.columns
-gowno = suicide.index
-print(col)
-#print(gowno)
-#print(ogon)
-
-values = suicide.values
-#print(values)
-
-types = suicide.dtypes
-#print(types)
 
 year = suicide['Year']
-#print(year)
+col = suicide.columns
+print(col)
 
-uni = suicide.Year.unique()
-counts = suicide.Year.value_counts().head(20)
-#print(uni)
-#print(counts)
+#aha = suicide[col[7]].where(suicide[col[2]] == 1998)
+#aha = suicide.agg({'Year' : ['1998']})
+#print(aha)
+group = suicide.groupby('Entity').agg(total_new_case = (col[5],np.sum))
 
-max = suicide.Year.max()
-#print(max)
+kraje = suicide['Entity'].values.tolist()
+kraje2 = []
+for element in kraje:
+    if element not in kraje2:
+        kraje2.append(element)
+    else:
+        pass
 
-des = suicide.Year.describe()
-#print(des)
+samobuje = group['total_new_case'].values.tolist()
 
-desall = suicide.describe()
-#print(desall)
+print(kraje2)
+print(samobuje)
+plt.bar(kraje2, samobuje)
+plt.xlabel('Country')
+plt.xticks(rotation = 90)
+plt.ylabel('Sum of suicide rates')
+plt.title('Sums of suicide rates in all ages in all countries in years 1990-2019')
 
-#print(suicide.Year.count(),suicide.Year.size)
+plt.show()
+#print(kraje2[156])
+#print(samobuje[156])
+#poland = suicide[col[5]].where(suicide['Entity'] == 'Poland')
+#print(poland)
+poland = suicide.loc[suicide['Entity'] == 'Poland', col[5]]
+sum_of_poland = np.sum(poland)
+print(sum_of_poland)
 
-missing_data = suicide.Year.isna().sum()
-#print(missing_data)
-suicide.Year.fillna(0) #wypełnia puste Not a number liczbami
-
-obj = suicide.select_dtypes('object')
-#print(obj)
-
-#filter = suicide.filter(like = 'Year')
-#print(filter)
-
-sort = suicide.sort_values('Entity', ascending = False)
-#print(sort)
-
-iloc = suicide.iloc[[0,3]]
-suicide.iloc[2:20,4]
-loc = suicide.loc
-#print(iloc)
-
-isocode = suicide.Year == 'POL'
-#print(isocode)
-
-sel = suicide.loc[suicide.Year == 'POL']
-#print(sel)
-
-suicide.set_index('Year')
-suicide.reset_index()
-
-suicide.groupby('Year')
-
-#groupby = suicide.groupby('Year').agg(total_new_case = ('Code',np.sum))
-#print(groupby)
+#graph = Pyasciigraph()
+#for line in graph.graph('Histogram of suicides' ,samobuje):
+#    print(line)
