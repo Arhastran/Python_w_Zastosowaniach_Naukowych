@@ -35,12 +35,20 @@ class IsingModel:
                     spins[i , j] = -1
         return spins
 
+    def hamiltonian(self, spins1, spins2):
+        sum1 = np.sum(spins1)
+        sum2 = np.sum(spins2)
+        return (-self.J*(sum1+sum2)-self.B*(sum2))
+
     def sumstate(self, spins,i,j):
        # for dw in range(-1, 2):
-        #    for dh in range(-1, 2):
-        sumprevious = spins[i+1,j]+spins[i-1,j]+spins[i,j+1]+spins[i,j-1]+spins[i,j]
-        sumnow = spins[i+1,j]+spins[i-1,j]+spins[i,j+1]+spins[i,j-1]-spins[i,j]
-        deltaE = (sumnow - sumprevious)
+       #    for dh in range(-1, 2):
+        field = spins[i+1,j]+spins[i-1,j]+spins[i,j+1]+spins[i,j-1]
+        previous = field + spins[i,j]
+        current = field - spins[i,j]
+        energyBefore = self.hamiltonian(field,previous)
+        energyAfter= self.hamiltonian(field,current)
+        deltaE = (energyBefore - energyAfter)
         if deltaE < 0:
             spins[i, j] = -1 * spins[i, j]
         return spins
@@ -81,8 +89,3 @@ for element in range(number):
             else:
                 r = draw.rectangle(shape, (0, 0, 0), width=1)
     img.save('/Users/adamignaciuk/PycharmProjects/PythonwZastosowaniachNaukowych/Lab2/img'+str(element)+'.png')
-
-
-
-
-
