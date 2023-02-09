@@ -61,16 +61,14 @@ class IsingModel:
         return spins
 
     def changing(self,spins, ran):
-        xd = []
-        xd.append(spins)
+        xd = spins
         for n in range(ran):
             i = np.random.randint(self.M-1)
             j = np.random.randint(self.N-1)
-            xd.append(self.sumstate(xd[n],i,j))
-        return xd, n
+            xd = self.sumstate(xd,i,j)
+        return xd
 
-    def set_data(self, datax, datay):
-        self.datax = datax
+    def set_data(self, datay):
         self.datay = datay
 
     def ani_update(self, i):
@@ -80,26 +78,29 @@ class IsingModel:
 
 
     def animate(self):
-        self.anim = animation.FuncAnimation(self.fig, self.ani_update, frames=4, interval=20,
-                                            blit=False)
+        self.anim = animation.FuncAnimation(self.fig, self.ani_update, frames=self.M, interval=20, blit=False)
         plt.show()
+        self.anim.save(f'{"Title"}.gif', writer='pillow')
 
 J = 1
-M = 10
-N = 10
+M = 30
+N = 30
 B = 1/2
 Beta = 1
 
 a = IsingModel(J=J,M=M, N=N, B=B, Beta=Beta)
-spins = a.randomspins()
-xd, number = a.changing(spins,10)
+spins = a.testrandomspins()
+xd = []
+xd.append(spins)
+for i in range(10):
+    xd.append(a.changing(xd[i],30))
 #print(spins)
 #print(xd)
 
 img = Image.new('RGB',(M,N), (255,255,255))
 draw = ImageDraw.Draw(img)
 
-a.set_data(number,xd)
+a.set_data(xd)
 a.animate()
 #for element in range(number+1):
 #    aha = xd[element]
