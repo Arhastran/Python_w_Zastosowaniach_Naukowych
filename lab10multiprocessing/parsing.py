@@ -1,36 +1,46 @@
 import requests as re
 import re as r
-import argparse
-import os
+import time
 from bs4 import BeautifulSoup
-from pathlib import Path
-from PIL import Image
+from PIL import Image, ImageFilter
 from io import BytesIO
-import multiprocessing.dummy
-import multiprocessing
+from multiprocessing.pool import Pool
 
+URL="http://www.if.pw.edu.pl/~mrow/dyd/wdprir"
+num_process = 10
 
 def get_images(url):
     conn = re.get(url)
     soup = BeautifulSoup(conn.text,'html.parser')
-    links = soup.find_all('a', href=r.compile('.*?(?=png|jpg|jpeg|gif)'))
+    links = soup.find_all('a', href=r.compile('.*?(?=png)'))
     return [img['href'] for img in links]
 
+def download_and_convert(image_name):
+    response = re.get(URL+"/"+image_name)
+    img = Image.open(BytesIO(response.content))
 
-def download_images(url, out, images):
-    path = os.getcwd() + f"\\{out}"
-    Path(path).mkdir(parents=True, exist_ok=True)
+    img = img.convert("L")
 
-    num_threads = len(images) * multiprocessing.cpu_count()
-    p = multiprocessing.dummy.Pool(num_threads)
+    img = img.filter(ImageFilter.GaussianBlur(radius = 5))
 
-    def convert_and_download(img):
-        data = Image.open(BytesIO(re.get(url + img).content)).convert("L")
-        data.save(f"{path}\\{img}")
+    img.save(image_name)
 
-    p.map(convert_and_download, [img for img in images])
+def test_sekwencyjne(images):
+    start = time.time()
+    for entry in images:
+        download_and_convert(entry)
+    end = time.time()
+    print(f"Sekwencyjne przetwarzanie: {end - start}")
+
+def test_wspolbiezne(images):
+    start = time.time()
+    pool = Pool(processes=num_process)
+    pool.map(download_and_convert, images)
+    end = time.time()
+    print(f"Wspolbiezne przetwarzanie: {end - start}")
 
 
+images = get_images(URL)
+test_sekwencyjne(images)
+test_wspolbiezne(images)
 
-
-images = get_images("http://www.if.pw.edu.pl/~mrow/dyd/wdprir")
