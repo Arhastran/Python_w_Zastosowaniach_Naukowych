@@ -2,6 +2,8 @@ import sympy as sp
 import numpy as np
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
+from matplotlib.pyplot import figure
+
 
 def SIR(y,t,N,beta,gamma):
   S,I,R = y
@@ -27,8 +29,13 @@ sol4 = odeint(SIR,y_0,t,(N,0.66,0.20))
 sol5 = odeint(SIR,y_0,t,(N,0.78,0.12))
 sol6 = odeint(SIR,y_0,t,(N,0.90,0.1))
 
-fig, ((fig1, fig2,fig3),(fig4, fig5,fig6)) = plt.subplots(2, 3)
+sol7 = odeint(SIR,y_0,t,(9000,0.90,0.1))
+sol8 = odeint(SIR,y_0,t,(5000,0.90,0.1))
+
+fig, ((fig1, fig2,fig3),(fig4, fig5, fig6)) = plt.subplots(2, 3)
+fig.set_size_inches(10, 7)
 leg = [("S"),("I"),("R")]
+
 fig1.plot(t,sol1)
 fig1.set_title("B=0.1, G=0.1")
 fig1.legend(leg)
